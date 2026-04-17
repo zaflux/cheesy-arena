@@ -55,7 +55,7 @@ type Arena struct {
 	Database         *model.Database
 	EventSettings    *model.EventSettings
 	accessPoint      network.AccessPoint
-	networkSwitch    *network.Switch
+	networkSwitch    network.TeamSwitch
 	redSCC           *network.SCCSwitch
 	blueSCC          *network.SCCSwitch
 	Plc              plc.Plc
@@ -189,7 +189,9 @@ func (arena *Arena) LoadSettings() error {
 		settings.NetworkSecurityEnabled,
 		accessPointWifiStatuses,
 	)
-	arena.networkSwitch = network.NewSwitch(settings.SwitchAddress, settings.SwitchPassword)
+	arena.networkSwitch = network.NewTeamSwitch(
+		settings.SwitchType, settings.SwitchAddress, settings.SwitchUsername, settings.SwitchPassword,
+	)
 	sccUpCommands := strings.Split(settings.SCCUpCommands, "\n")
 	sccDownCommands := strings.Split(settings.SCCDownCommands, "\n")
 	arena.redSCC = network.NewSCCSwitch(
